@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.10
+    commands:
+      - echo "Installing dependencies..."
+      - pip install -r requirements.txt
+  build:
+    commands:
+      - echo "Linting code..."
+      - make lint
+      - echo "Running tests..."
+      - make test
+  post_build:
+    commands:
+      - echo "Build completed successfully!"
+
+# You can also specify artifacts to save, but for CI we just need the commands to pass.

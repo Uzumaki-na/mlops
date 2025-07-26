@@ -1,0 +1,15 @@
+steps:
+# Step 1: Install project dependencies
+- name: 'python:3.10'
+  entrypoint: 'pip'
+  args: ['install', '-r', 'requirements.txt']
+
+# Step 2: Lint the code
+- name: 'python:3.10'
+  entrypoint: 'make'
+  args: ['lint']
+
+# Step 3: Run the tests
+- name: 'python:3.10'
+  entrypoint: 'make'
+  args: ['test']
