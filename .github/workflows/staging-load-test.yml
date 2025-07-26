@@ -1,0 +1,31 @@
+name: Staging Load Test
+
+on:
+  push:
+    branches: [ "staging" ]
+
+jobs:
+  load-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t staging-app .
+
+      - name: Run web application in background
+        run: docker run -d --name web -p 8000:8000 staging-app
+
+      - name: Run Locust load test
+        run: |
+          # The --headless flag runs Locust without the web UI
+          # -u specifies the number of users to simulate
+          # -r specifies the spawn rate (users per second)
+          # --run-time specifies how long the test should run
+          # --host points to the running application
+          locust -f locustfile.py --headless -u 10 -r 2 --run-time 30s --host http://localhost:8000
+
+      - name: Stop web application container
+        if: always() # This step runs even if the load test fails
+        run: docker stop web
